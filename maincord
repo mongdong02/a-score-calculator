@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>원점수 계산기</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+    }
+    select, button {
+      padding: 10px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    #result {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>원점수 계산기</h1>
+  <div class="section">
+    <label for="subject">과목 선택:</label>
+    <select id="subject">
+      <option value="math">공통수학</option>
+      <option value="korean">공통국어</option>
+      <option value="english">공통영어</option>
+      <option value="social">통합사회</option>
+      <option value="science">통합과학</option>
+      <option value="tech">기술가정</option>
+      <option value="history">한국사</option>
+    </select>
+  </div>
+  <div class="section">
+    <label for="mid">중간고사 점수:</label>
+    <input type="number" id="mid" />
+    <label for="final">기말고사 점수:</label>
+    <input type="number" id="final" />
+    <label for="task">수행평가 점수:</label>
+    <input type="number" id="task" />
+  </div>
+  <button onclick="calculateScore()">원점수 계산하기</button>
+  <div id="result"></div>
+
+  <script>
+    function calculateScore() {
+      const subject = document.getElementById("subject").value;
+      const mid = parseFloat(document.getElementById("mid").value) || 0;
+      const final = parseFloat(document.getElementById("final").value) || 0;
+      const task = parseFloat(document.getElementById("task").value) || 0;
+
+      let weights = {
+        math: { mid: 0.35, final: 0.35, task: 0.3 },
+        korean: { mid: 0.33, final: 0.37, task: 0.3 },
+        english: { mid: 0.35, final: 0.35, task: 0.3 },
+        social: { mid: 0.35, final: 0.35, task: 0.3 },
+        science: { mid: 0.25, final: 0.25, task: 0.5 },
+        tech: { mid: 0, final: 0.4, task: 0.6 },
+        history: { mid: 0.35, final: 0.35, task: 0.2 }
+      };
+
+      if (!weights[subject]) {
+        document.getElementById("result").innerText = "선택한 과목의 비율 정보가 없습니다.";
+        return;
+      }
+
+      const w = weights[subject];
+      const total = mid * w.mid + final * w.final + task * w.task;
+
+      let level = "";
+      if (total >= 90) {
+        level = "A";
+      } else if (total >= 80) {
+        level = "B";
+      } else if (total >= 70) {
+        level = "C";
+      } else if (total >= 60) {
+        level = "D";
+      } else {
+        level = "E";
+      }
+
+      document.getElementById("result").innerText = `계산된 원점수는 ${total.toFixed(2)}점이며, 성취도는 ${level}입니다.`;
+    }
+  </script>
+</body>
+</html>
